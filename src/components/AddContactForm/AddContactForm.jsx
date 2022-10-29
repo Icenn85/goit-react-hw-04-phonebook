@@ -1,40 +1,39 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import css from './AddContactForm.module.css';
 
-class AddContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+const AddContactForm = ({ onAddContacts }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleChange = evt => {
+  const handleChange = evt => {
     const { name, value } = evt.target;
-    this.setState({
-      [name]: value,
-    });
+     switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
-  };
-
-  handleSubmit = evt => {
+  const handleSubmit = evt => {
     evt.preventDefault();
 
-    this.props.onAddContacts(this.state);
-    this.reset();
+    onAddContacts(name, number);
+    setName('');
+    setNumber('');
   };
 
-  render() {
-    const { name, number } = this.state;
-
     return (
-      <form className={css.form} onSubmit={this.handleSubmit}>
+      <form className={css.form} onSubmit={handleSubmit}>
         <label className={css.label}>Name</label>
         <input
           className={css.input}
           value={name}
-          onChange={this.handleChange}
+          onChange={handleChange}
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -45,7 +44,7 @@ class AddContactForm extends Component {
         <input
           className={css.input}
           value={number}
-          onChange={this.handleChange}
+          onChange={handleChange}
           type="tel"
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -58,6 +57,5 @@ class AddContactForm extends Component {
       </form>
     );
   }
-}
 
 export default AddContactForm;
